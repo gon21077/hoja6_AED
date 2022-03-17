@@ -3,6 +3,9 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
+
+import javax.swing.plaf.TextUI;
 
 /**
  * Autor: Ana Escobar (20489) y Juan Gonzalez-Campo (21077)
@@ -10,11 +13,14 @@ import java.util.Map;
  */
 public class Main {
     
-    static String path = "cards_desc.txt";
-    static String line = null;
-    static Map<String, String> completo = new HashMap<String, String>();
-    static Map<String, String> usuario = new HashMap<String, String>();
-    
+    static String path = "cards_desc.txt"; //Path del archivo
+    static String line = null; // linea leida del archivo
+    static Map<String, String> all;  //todas las cartas
+    static Map<String,Integer> rep; //cartas repetidas
+    static ArrayList<String> user = new ArrayList<>(); // Cartas del usuario
+    /**
+     * Lee el archivo y sus datos en el mapa All
+     */
     public static void leerArchivo(){
         try {
             /**
@@ -25,7 +31,7 @@ public class Main {
                 String[] line1;
                 line = line.replace("|", "@");
                 line1 = line.split("@");
-                completo.put(line1[0], line1[1]);
+                all.put(line1[0], line1[1]);
             }
         } catch(Exception e){
             System.out.println("Error al leer archivo");
@@ -35,11 +41,8 @@ public class Main {
     public static void main(String[] args){
         //instacias utiles
         Factory<String,String> factory = new Factory<>();
-        leerArchivo();
+        acciones ac = new acciones();
         Scanner sc = new Scanner(System.in);
-        Map<String, String> all;  //todas las cartas
-        Map<String,Integer> rep; //cartas repetidas
-        Map<String, String> user;  //cartas del usuario
         int menu = 1; 
 
         System.out.println("¡Bienvenido!");
@@ -51,8 +54,9 @@ public class Main {
 
         //factory:
         all = factory.genMap(num);
-        user = factory.genMap(num);
         rep = factory.genCantMap(num);
+
+        leerArchivo();
 
 
         while(menu != 0) {
@@ -63,16 +67,26 @@ public class Main {
             int opc = sc.nextInt();
             switch (opc) {
                 case 1://agregar cartas
-                    
+                    ac.agregarCarta(all, user, rep);
+                    break;
                 case 2://mostrar el tipo de carta indicada por el nombre
-                    
-                case 3: //muestra el nombre, tipo y cantidad de una carta
-                  
+                    ac.mostrarTipo(all);
+                    break;
+                case 3: //muestra el nombre, tipo y cantidad todas las cartas del usuario
+                    ac.op3(all, user, rep);
+                    break;
                 case 4: //muestra  el nombre, tipo y cantidad de una carta en orden
-
+                    ac.op4(all, user, rep);
+                    break;
                 case 5: //muestra todas las cartas
-               
+                    ac.monstrarTodas(all);
+                    break;
                 case 6: // muestra todas las cartas de manera ordenada
+                    ac.mostrarOrdenados(all);
+                    break;
+                case 7: 
+                    menu = 0;
+                    break;
             }
         }
     }
