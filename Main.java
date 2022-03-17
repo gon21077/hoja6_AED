@@ -1,13 +1,41 @@
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Autor: Ana Escobar (20489) y Juan Gonzalez-Campo (21077)
  * Descripcion: Patron de diseño que permite crear instancias de objetos que comparten una interfaz
  */
 public class Main {
+    
+    static String path = "cards_desc.txt";
+    static String line = null;
+    static Map<String, String> completo = new HashMap<String, String>();
+    static Map<String, String> usuario = new HashMap<String, String>();
+    
+    public static void leerArchivo(){
+        try {
+            /**
+             * Mientras haya un archivo, se lee.
+             */
+            BufferedReader reader = new BufferedReader(new FileReader(path));
+            while((line = reader.readLine()) != null){
+                String[] line1;
+                line = line.replace("|", "@");
+                line1 = line.split("@");
+                completo.put(line1[0], line1[1]);
+            }
+        } catch(Exception e){
+            System.out.println("Error al leer archivo");
+        }
+    }
 
     public static void main(String[] args){
         //instacias utiles
         Factory<String,String> factory = new Factory<>();
+        leerArchivo();
         Scanner sc = new Scanner(System.in);
         Map<String, String> all;  //todas las cartas
         Map<String,Integer> rep; //cartas repetidas
@@ -48,4 +76,5 @@ public class Main {
             }
         }
     }
+
 }
